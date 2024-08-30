@@ -108,7 +108,9 @@ fn main() {
 	println!("Entering main loop...");
 	let stdin_channel = spawn_stdin_channel();
     loop {
+		// Bacnet Loop
 		adapter::bacnet_loop().unwrap();
+		// Check for key input
 		if let Ok(key) = stdin_channel.try_recv() {
             if check_end_loop(&key) {
 				break;
@@ -253,6 +255,7 @@ fn callback_receive_message(message: *mut u8, max_message_length: u16, received_
 			*network_type = bacnet_const::NETWORK_TYPE_IP;
 		}
 
+		// Check message size
 		if usize::from(max_message_length) < bytes_read || usize::from(MAX_RENDER_BUFFER_LENGTH) < bytes_read {
 			return 0;
 		}
@@ -272,6 +275,7 @@ fn callback_receive_message(message: *mut u8, max_message_length: u16, received_
 fn callback_send_message(message: *const u8, message_length: u16, connection_string: *const u8, connection_string_length: u8, network_type: u8, broadcast: bool) -> u16 {
 	println!("callback_send_message");
 
+	// Check parameters
 	if message.is_null() || message_length == 0 {
 		println!("Nothing to send");
 		return 0;

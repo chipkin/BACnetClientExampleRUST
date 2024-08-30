@@ -2,6 +2,7 @@ use std::env;
 use std::os::raw::c_char;
 use once_cell::sync::Lazy;
 
+// Picks the correct extension depending on OS
 fn get_extension(system: &str) -> &str {
     if system == "windows" {
         ".dll"
@@ -10,6 +11,7 @@ fn get_extension(system: &str) -> &str {
     }
 }
 
+// Load library for CAS BACnet Stack once
 fn load_library() -> libloading::Library {
     unsafe {
         return libloading::Library::new("./bin/CASBACnetStack_x64_Debug".to_owned() + get_extension(env::consts::OS)).unwrap();
